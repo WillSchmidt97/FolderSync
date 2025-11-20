@@ -1,2 +1,13 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using System;
+using System.Threading.Tasks;
+
+namespace FolderSync
+{
+    internal class Program
+    {
+        public static async Task<int> Main(string[] args)
+        {
+            return 0;
+        }
+    }
+}
