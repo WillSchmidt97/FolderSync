@@ -1,4 +1,5 @@
 ﻿using FolderSync.Models;
+using FolderSync.Services;
 using FolderSync.Utils;
 using System;
 using System.Threading.Tasks;
@@ -9,17 +10,20 @@ namespace FolderSync
     {
         public static async Task<int> Main(string[] args)
         {
-            // Parse args
-            SyncConfig syncConfig = CommandLine.Parse(args);
+            var config = CommandLine.Parse(args);
+            var logger = new Logger(config.LogFilePath);
+            var syncService = new SyncService(config, logger);
 
-            // Initialize logger
-            Logger.Init(syncConfig.LogFilePath);
-            Logger.Info("Settings successfully loaded.");
-            Logger.Info($"Source: {syncConfig.SourcePath}");
-            Logger.Info($"Replica: {syncConfig.ReplicaPath}");
-            Logger.Info($"Interval: {syncConfig.IntervalSeconds} seconds");
+            logger.Info("Settings successfully loaded.");
+            logger.Info($"Source: {config.SourcePath}");
+            logger.Info($"Replica: {config.ReplicaPath}");
+            logger.Info($"Interval: {config.IntervalSeconds} seconds");
 
-            return 0;
+            while (true)
+            {
+                syncService.PerformSync();
+                await Task.Delay(config.IntervalSeconds * 1000);
+            }
         }
     }
 }

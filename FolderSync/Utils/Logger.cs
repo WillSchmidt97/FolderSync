@@ -8,33 +8,30 @@ namespace FolderSync.Utils
 {
     public class Logger
     {
-        private static string _logFilePath;
+        private readonly string _logFilePath;
 
         public Logger(string logFilePath)
         {
             _logFilePath = logFilePath;
+
+            File.AppendAllText(
+                _logFilePath,
+                $"[START] Logging started at {DateTime.Now:dd/MM/yyyy HH:mm:ss}{Environment.NewLine}"
+            );
         }
 
-        public static void Init(string logFilePath)
+        public void Info(string message)
         {
-            _logFilePath = logFilePath;
-
-            File.WriteAllTextAsync(_logFilePath, $"[START] Logging started at {DateTime.Now}\n").Wait();
+            string log = $"[INFO] {DateTime.Now:dd/MM/yyyy HH:mm:ss}: {message}";
+            Console.WriteLine(log);
+            File.AppendAllText(_logFilePath, log + Environment.NewLine);
         }
 
-        public static void Info(string message)
+        public void Error(string message)
         {
-            string line = $"[INFO] {DateTime.Now}: {message}";
-            Console.Write(line);
-
-            File.AppendAllTextAsync(_logFilePath, message + Environment.NewLine).Wait();
-        }
-
-        public static void Error(string message, Exception ex = null)
-        {
-            string line = $"[ERROR] {DateTime.Now}: {message} {ex?.Message}";
-            Console.WriteLine(line);
-            File.AppendAllTextAsync(_logFilePath, line + Environment.NewLine).Wait();
+            string log = $"[ERROR] {DateTime.Now:dd/MM/yyyy HH:mm:ss}: {message}";
+            Console.WriteLine(log);
+            File.AppendAllText(_logFilePath, log + Environment.NewLine);
         }
     }
 }
