@@ -25,7 +25,13 @@ namespace FolderSync.Services
             {
                 _logger.Info("Start synchronization.");
 
-                Directory.CreateDirectory(_config.ReplicaPath);
+                // Creating the given source path if does not exist.
+                if (!Directory.Exists(_config.SourcePath))
+                    Directory.CreateDirectory(_config.SourcePath);
+
+                // Creating the given replica path if it does not exist.
+                if (!Directory.Exists(_config.ReplicaPath))
+                    Directory.CreateDirectory(_config.ReplicaPath);
 
                 SyncDirectory(_config.SourcePath, _config.ReplicaPath);
                 RemovedDeletedFiles(_config.SourcePath, _config.ReplicaPath);
