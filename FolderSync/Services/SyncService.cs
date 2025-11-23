@@ -45,7 +45,7 @@ namespace FolderSync.Services
                 string fileName = Path.GetFileName(sourceFile);
                 string replicaFile = Path.Combine(replica, fileName);
 
-                if (!File.Exists(replicaFile) || File.GetLastWriteTimeUtc(sourceFile) > File.GetLastWriteTimeUtc(replicaFile)) 
+                if (!File.Exists(replicaFile) || DifferentFiles(sourceFile, replicaFile)) 
                 {
                     File.Copy(sourceFile, replicaFile, true);
                     _logger.Info($"File copied: {fileName}");
@@ -91,6 +91,14 @@ namespace FolderSync.Services
                     RemovedDeletedFiles(sourceDir, replicaDir);
                 }
             }
+        }
+
+        private bool DifferentFiles(string sourceFile, string replicaFile)
+        {
+            string sourceHash = FileHash.HashSHA256(sourceFile);
+            string replicaHash = FileHash.HashSHA256(replicaFile);
+
+            return sourceHash != replicaHash;
         }
     }
 }
