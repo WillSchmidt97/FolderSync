@@ -109,7 +109,7 @@
 
     source: The source folder is not obliged to already exist for the program to works, if it doesnt exist it will be created.
     replica: Same as with the source folder.
-    log: The log file is not obliged to already exist for the program to works, if it doesn't exist a .txt file will be created. Neverthless, it is required that all the folders given in the path are already created.
+    log: The log file is not obliged to already exist for the program to works, if it doesn't exist a .txt file will be created.
 
 
 
