@@ -47,7 +47,9 @@ namespace FolderSync.Utils
             {
                 lock (_lockObj)
                 {
-                    File.AppendAllText(_logFilePath, text + Environment.NewLine);
+                    using var stream = new FileStream(_logFilePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                    using var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true };
+                    writer.WriteLine(text);
                 }
             }
             catch
