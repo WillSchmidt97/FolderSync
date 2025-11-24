@@ -44,6 +44,15 @@ namespace FolderSync.Utils
                 }
             }
 
+            if (string.IsNullOrWhiteSpace(config.SourcePath))
+                throw new ArgumentException("Source path is required.");
+
+            if (string.IsNullOrWhiteSpace(config.ReplicaPath))
+                throw new ArgumentException("Replica path is required.");
+
+            if (!config.Once && config.IntervalSeconds <= 0)
+                throw new ArgumentException("Interval must be greater than zero when --once is not used.");
+
             return config;
         }
     }
