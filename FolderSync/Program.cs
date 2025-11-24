@@ -19,11 +19,43 @@ namespace FolderSync
             logger.Info($"Replica: {config.ReplicaPath}");
             logger.Info($"Interval: {config.IntervalSeconds} seconds");
 
-            while (true)
+            if (config.Once)
             {
+                logger.Info($"Once: set");
                 syncService.PerformSync();
-                await Task.Delay(config.IntervalSeconds * 1000);
+                logger.Info("Single synchronization finished.");
+
+                return 0;
             }
+
+            using var cts = new CancellationTokenSource();
+            Console.CancelKeyPress += (s, e) =>
+            {
+                e.Cancel = true;
+                logger.Info("Cancel requested via console.");
+                cts.Cancel();
+            };
+
+            try
+            {
+                while (!cts.IsCancellationRequested)
+                {
+                    syncService.PerformSync();
+
+                    await Task.Delay(config.IntervalSeconds * 1000, cts.Token);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                logger.Info("Cancellation detected. Exiting gracefully.");
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"Fatal error in loop: {ex.Message}");
+                return 1;
+            }
+
+            return 0;
         }
     }
 }

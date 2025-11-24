@@ -35,6 +35,10 @@ namespace FolderSync.Utils
                         config.LogFilePath = args[++i];
                         break;
 
+                    case "--once":
+                        config.Once = true;
+                        break;
+
                     default:
                         throw new ArgumentException($"Invalid argument: {args[i]}");
                 }
