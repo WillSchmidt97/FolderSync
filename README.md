@@ -1,4 +1,4 @@
-FolderSync
+📘 FolderSync
 
     A lightweight C# application that performs one-way synchronization between a source folder and a replica folder.
     The program ensures the replica is always an exact copy of the source, including file creation, updates, and deletions.
@@ -23,34 +23,37 @@ FolderSync
 
 
 
-How It Works
-The application takes command-line arguments defining:
-    -Source folder
+📦 How It Works
 
-    -Replica folder
+    The application takes command-line arguments defining:
 
-    -Sync interval (Not necessary if using --once)
+        -Source folder
 
-    -Log file path
+        -Replica folder
 
-    -Optional --once flag
+        -Sync interval (Not necessary if using --once)
 
-On each synchronization cycle:
-    -Files in the source are hashed using SHA-256
+        -Log file path
 
-    -Files are copied only if the hash differs or the file does not exist in the replica
+        -Optional --once flag
 
-    -Missing files/folders in the source are deleted from the replica
+    On each synchronization cycle:
 
-    -All operations are logged
+        -Files in the source are hashed using SHA-256
 
-    If --once is used, synchronization runs only one time and exits.
+        -Files are copied only if the hash differs or the file does not exist in the replica
+
+        -Missing files/folders in the source are deleted from the replica
+
+        -All operations are logged
+
+        If --once is used, synchronization runs only one time and exits.
 
 
 
-Usage
+🛠️ Usage
 
-Periodic synchronization
+    Periodic synchronization
     Runs indefinitely, syncing every given seconds:
 
     FolderSync.exe --source "C:\path\source" --replica "C:\path\replica" --interval 5 --log "C:\path\log.txt"
@@ -63,7 +66,8 @@ Periodic synchronization
 
 
 
-How to Build
+🧪 How to Build
+
     From the project root:
     dotnet build -c Release
 
@@ -74,11 +78,13 @@ How to Build
 
 
 
-How to Run (development mode)
+🧪 How to Run (development mode)
+
     dotnet run --project FolderSync -- --source "your/path/source" --replica "your/path/replica" --interval 5 --log "your/path/log/log.txt"
 
 
-Hash Verification (SHA-256)
+🛡️ Hash Verification (SHA-256)
+
     The application uses SHA-256 hashing instead of timestamps to reliably detect file changes.
 
     A file is copied to the replica when:
@@ -86,7 +92,8 @@ Hash Verification (SHA-256)
         -OR the computed hash differs
 
     
-Logging
+📝 Logging
+
     Every sync operation is logged to:
         -Console
         -The log file specified by --log
@@ -96,7 +103,8 @@ Logging
 
 
 
-Paths:
+📁 Paths:
+
     When giving the paths in the command line it is important to notice:
 
     source: The source folder is not obliged to already exist for the program to works, if it doesnt exist it will be created.
@@ -105,5 +113,6 @@ Paths:
 
 
 
-Deletion Handling:
+🧹 Deletion Handling:
+
     If a file or folder exists in the replica but not in the source, it is removed to keep the replica fully synchronized.

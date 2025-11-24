@@ -63,7 +63,12 @@ namespace FolderSync.Services
                 string dirName = Path.GetFileName(sourceDir);
                 string replicaDir = Path.Combine(replica, dirName);
 
-                Directory.CreateDirectory(replicaDir);
+                if (!Directory.Exists(replicaDir))
+                {
+                    Directory.CreateDirectory(replicaDir);
+                    _logger.Info($"Directory created: {dirName}");
+                }
+
                 SyncDirectory(sourceDir, replicaDir);
             }
         }
