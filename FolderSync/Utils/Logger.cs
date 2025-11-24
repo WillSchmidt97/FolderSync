@@ -9,11 +9,12 @@ namespace FolderSync.Utils
     public class Logger
     {
         private readonly string _logFilePath;
+        private readonly object _lockObj = new object();
 
         public Logger(string logFilePath)
         {
             if (string.IsNullOrWhiteSpace(logFilePath))
-                throw new ArgumentException("Log file path cannot be empty.");
+                throw new ArgumentException("Log file path cannot be empty.", nameof(logFilePath));
 
             _logFilePath = logFilePath;
 
@@ -30,21 +31,24 @@ namespace FolderSync.Utils
         {
             string log = $"[INFO] {DateTime.Now:dd/MM/yyyy HH:mm:ss}: {message}";
             Console.WriteLine(log);
-            File.AppendAllText(_logFilePath, log + Environment.NewLine);
+            SafeWrite(log);
         }
 
         public void Error(string message)
         {
             string log = $"[ERROR] {DateTime.Now:dd/MM/yyyy HH:mm:ss}: {message}";
             Console.WriteLine(log);
-            File.AppendAllText(_logFilePath, log + Environment.NewLine);
+            SafeWrite(log);
         }
 
         private void SafeWrite(string text)
         {
             try
             {
-                File.AppendAllText(_logFilePath, text + Environment.NewLine);
+                lock (_lockObj)
+                {
+                    File.AppendAllText(_logFilePath, text + Environment.NewLine);
+                }
             }
             catch
             {
