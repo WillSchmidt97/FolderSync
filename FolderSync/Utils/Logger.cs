@@ -12,12 +12,18 @@ namespace FolderSync.Utils
 
         public Logger(string logFilePath)
         {
+            if (string.IsNullOrWhiteSpace(logFilePath))
+                throw new ArgumentException("Log file path cannot be empty.");
+
             _logFilePath = logFilePath;
 
-            File.AppendAllText(
-                _logFilePath,
-                $"[START] Logging started at {DateTime.Now:dd/MM/yyyy HH:mm:ss}{Environment.NewLine}"
-            );
+            string? dir = Path.GetDirectoryName(_logFilePath);
+            if (!string.IsNullOrEmpty(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            SafeWrite($"[START] Logging started at {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
         }
 
         public void Info(string message)
@@ -32,6 +38,18 @@ namespace FolderSync.Utils
             string log = $"[ERROR] {DateTime.Now:dd/MM/yyyy HH:mm:ss}: {message}";
             Console.WriteLine(log);
             File.AppendAllText(_logFilePath, log + Environment.NewLine);
+        }
+
+        private void SafeWrite(string text)
+        {
+            try
+            {
+                File.AppendAllText(_logFilePath, text + Environment.NewLine);
+            }
+            catch
+            {
+                Console.WriteLine("[LOGGER ERROR] Failed to write to log file.");
+            }
         }
     }
 }
