@@ -17,7 +17,8 @@ namespace FolderSync
             logger.Info("Settings successfully loaded.");
             logger.Info($"Source: {config.SourcePath}");
             logger.Info($"Replica: {config.ReplicaPath}");
-            logger.Info($"Interval: {config.IntervalSeconds} seconds");
+            if (!config.Once)
+                logger.Info($"Interval: {config.IntervalSeconds} seconds");
 
             if (config.Once)
             {

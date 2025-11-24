@@ -21,18 +21,21 @@ namespace FolderSync.Utils
                 switch (args[i])
                 {
                     case "--source":
-                        config.SourcePath = args[++i];
+                        config.SourcePath = Next(args, ref i);
                         break;
 
                     case "--replica":
-                        config.ReplicaPath = args[++i];
+                        config.ReplicaPath = Next(args, ref i);
                         break;
 
                     case "--interval":
-                        config.IntervalSeconds = int.Parse(args[++i]);
+                        if (!int.TryParse(Next(args, ref i), out int interval))
+                            throw new ArgumentException("Invalid value for --interval. Please, type a number here.");
+                        config.IntervalSeconds = interval;
                         break;
+
                     case "--log":
-                        config.LogFilePath = args[++i];
+                        config.LogFilePath = Next(args, ref i);
                         break;
 
                     case "--once":
@@ -44,16 +47,30 @@ namespace FolderSync.Utils
                 }
             }
 
+
+            // Argument validation.
+
             if (string.IsNullOrWhiteSpace(config.SourcePath))
                 throw new ArgumentException("Source path is required.");
 
             if (string.IsNullOrWhiteSpace(config.ReplicaPath))
                 throw new ArgumentException("Replica path is required.");
 
+            if (string.IsNullOrEmpty(config.LogFilePath))
+                throw new ArgumentException("Log file path is required.");
+
             if (!config.Once && config.IntervalSeconds <= 0)
                 throw new ArgumentException("Interval must be greater than zero when --once is not used.");
 
+
             return config;
+        }
+
+        private static string Next(string[] args, ref int i)
+        {
+            if (i + 1 >= args.Length)
+                throw new ArgumentException($"Argument expected after '{args[i]}'");
+            return args[++i];
         }
     }
 }
