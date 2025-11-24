@@ -14,7 +14,7 @@ namespace FolderSync.Utils
             if (args is null || args.Length == 0)
                 throw new ArgumentException("No argument given");
 
-            var config = new SyncConfig();
+            SyncConfig config = new SyncConfig();
 
             for (int i = 0; i < args.Length; i++)
             {
